@@ -1,0 +1,83 @@
+<template>
+    <lightning-card title="Chained create — Account + Contacts, 1 atomic request" icon-name="standard:hierarchy">
+        <div class="slds-var-p-horizontal_medium">
+            <p class="slds-var-p-bottom_small slds-text-color_weak">
+                The contacts reference <code>AccountId: "&#64;{account}"</code> — the Id of an
+                Account that doesn't exist yet when the request is sent. The server resolves
+                the chained reference, all-or-nothing.
+            </p>
+
+            <lightning-input
+                label="Account Name"
+                value={accountName}
+                required
+                onchange={handleAccountNameChange}
+            ></lightning-input>
+
+            <div class="slds-text-title_caps slds-var-p-top_medium slds-var-p-bottom_x-small">
+                Contacts
+            </div>
+            <template for:each={contactRows} for:item="row">
+                <lightning-layout key={row.key} vertical-align="end">
+                    <lightning-layout-item size="5" padding="horizontal-small">
+                        <lightning-input
+                            label="First Name"
+                            data-key={row.key}
+                            data-field="firstName"
+                            value={row.firstName}
+                            onchange={handleContactChange}
+                        ></lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="5" padding="horizontal-small">
+                        <lightning-input
+                            label="Last Name"
+                            data-key={row.key}
+                            data-field="lastName"
+                            value={row.lastName}
+                            onchange={handleContactChange}
+                        ></lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" padding="horizontal-small">
+                        <lightning-button-icon
+                            icon-name="utility:delete"
+                            alternative-text="Remove contact"
+                            data-key={row.key}
+                            onclick={handleRemoveContact}
+                        ></lightning-button-icon>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </template>
+
+            <div class="slds-var-p-vertical_small">
+                <lightning-button
+                    label="Add Contact"
+                    icon-name="utility:add"
+                    onclick={handleAddContact}
+                    class="slds-var-m-right_small"
+                ></lightning-button>
+                <lightning-button
+                    variant="brand"
+                    label="Create all (1 request)"
+                    onclick={handleCreate}
+                    disabled={isLoading}
+                ></lightning-button>
+            </div>
+
+            <template lwc:if={errorMessages}>
+                <template for:each={errorMessages} for:item="error">
+                    <div key={error.id} class="slds-text-color_error slds-var-p-around_x-small">
+                        {error.message}
+                    </div>
+                </template>
+            </template>
+
+            <template lwc:if={createdAccountId}>
+                <p class="slds-var-p-vertical_small">
+                    Created:
+                    <a href={accountUrl} target="_blank">open the new Account</a>
+                    to see its linked Contacts.
+                </p>
+            </template>
+        </div>
+    </lightning-card>
+</template>

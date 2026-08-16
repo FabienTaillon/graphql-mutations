@@ -1,0 +1,67 @@
+<template>
+    <lightning-card title="Lightning Data Service cache in action" icon-name="standard:data_streams">
+        <div class="slds-var-p-horizontal_medium">
+            <lightning-record-picker
+                label="Pick a Contact"
+                placeholder="Search Contacts..."
+                object-api-name="Contact"
+                onchange={handleContactChange}
+            ></lightning-record-picker>
+
+            <template lwc:if={errorMessages}>
+                <template for:each={errorMessages} for:item="error">
+                    <div key={error.id} class="slds-text-color_error slds-var-p-around_x-small">
+                        {error.message}
+                    </div>
+                </template>
+            </template>
+
+            <template lwc:if={contactId}>
+                <lightning-layout multiple-rows class="slds-var-p-top_small">
+                    <lightning-layout-item size="6" padding="around-small">
+                        <div class="slds-box slds-box_small">
+                            <div class="slds-text-title_caps slds-var-p-bottom_small">
+                                Standard record form (LDS subscriber)
+                            </div>
+                            <lightning-record-view-form
+                                record-id={contactId}
+                                object-api-name="Contact"
+                            >
+                                <lightning-output-field field-name="Name"></lightning-output-field>
+                                <lightning-output-field field-name="Title"></lightning-output-field>
+                                <lightning-output-field field-name="Phone"></lightning-output-field>
+                            </lightning-record-view-form>
+                        </div>
+                    </lightning-layout-item>
+
+                    <lightning-layout-item size="6" padding="around-small">
+                        <div class="slds-box slds-box_small">
+                            <div class="slds-text-title_caps slds-var-p-bottom_small">
+                                GraphQL mutation (no refresh code)
+                            </div>
+                            <lightning-input
+                                label="New Title"
+                                data-field="title"
+                                value={title}
+                                onchange={handleChange}
+                            ></lightning-input>
+                            <lightning-input
+                                label="New Phone"
+                                data-field="phone"
+                                value={phone}
+                                onchange={handleChange}
+                            ></lightning-input>
+                            <div class="slds-var-p-top_small">
+                                <lightning-button
+                                    variant="brand"
+                                    label="Update via executeMutation"
+                                    onclick={handleUpdate}
+                                ></lightning-button>
+                            </div>
+                        </div>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </template>
+        </div>
+    </lightning-card>
+</template>

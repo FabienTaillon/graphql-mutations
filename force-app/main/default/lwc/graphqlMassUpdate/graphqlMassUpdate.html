@@ -1,0 +1,33 @@
+<template>
+    <lightning-card title="Mass update — one GraphQL request" icon-name="standard:record_update">
+        <div class="slds-var-p-horizontal_medium">
+            <p class="slds-var-p-bottom_small slds-text-color_weak">
+                Edit any cells below, then Save: every draft row becomes an aliased
+                <code>ContactUpdate</code> operation inside a single mutation document.
+            </p>
+
+            <template lwc:if={lastRequestSummary}>
+                <lightning-badge label={lastRequestSummary} class="slds-var-m-bottom_small"></lightning-badge>
+            </template>
+
+            <template lwc:if={errorMessages}>
+                <template for:each={errorMessages} for:item="error">
+                    <div key={error.id} class="slds-text-color_error slds-var-p-around_x-small">
+                        {error.message}
+                    </div>
+                </template>
+            </template>
+
+            <template lwc:if={contacts}>
+                <lightning-datatable
+                    key-field="Id"
+                    data={contacts}
+                    columns={columns}
+                    draft-values={draftValues}
+                    onsave={handleSave}
+                    hide-checkbox-column
+                ></lightning-datatable>
+            </template>
+        </div>
+    </lightning-card>
+</template>

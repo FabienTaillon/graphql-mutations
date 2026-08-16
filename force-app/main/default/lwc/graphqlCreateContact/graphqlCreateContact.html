@@ -1,0 +1,75 @@
+<template>
+    <lightning-card title="Create a Contact — pure JavaScript" icon-name="standard:contact">
+        <div class="slds-var-p-horizontal_medium">
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="6" padding="around-small">
+                    <lightning-input
+                        label="First Name"
+                        data-field="firstName"
+                        value={firstName}
+                        onchange={handleChange}
+                    ></lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item size="6" padding="around-small">
+                    <lightning-input
+                        label="Last Name"
+                        data-field="lastName"
+                        value={lastName}
+                        required
+                        onchange={handleChange}
+                    ></lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item size="6" padding="around-small">
+                    <lightning-input
+                        label="Title"
+                        data-field="title"
+                        value={title}
+                        onchange={handleChange}
+                    ></lightning-input>
+                </lightning-layout-item>
+                <lightning-layout-item size="6" padding="around-small">
+                    <lightning-input
+                        type="email"
+                        label="Email"
+                        data-field="email"
+                        value={email}
+                        onchange={handleChange}
+                    ></lightning-input>
+                </lightning-layout-item>
+            </lightning-layout>
+
+            <div class="slds-var-p-around_small">
+                <lightning-button
+                    variant="brand"
+                    label="Create via GraphQL"
+                    onclick={handleCreate}
+                    disabled={isLoading}
+                ></lightning-button>
+            </div>
+
+            <template lwc:if={errorMessages}>
+                <template for:each={errorMessages} for:item="error">
+                    <div key={error.id} class="slds-text-color_error slds-var-p-around_x-small">
+                        {error.message}
+                    </div>
+                </template>
+            </template>
+
+            <template lwc:if={contacts}>
+                <div class="slds-text-title_caps slds-var-p-vertical_small">
+                    Most recently created (GraphQL query wire)
+                </div>
+                <ul class="slds-has-dividers_bottom-space">
+                    <template for:each={contacts} for:item="contact">
+                        <li key={contact.Id} class="slds-item">
+                            <strong>{contact.Name}</strong>
+                            <span class="slds-var-p-left_small slds-text-color_weak">
+                                {contact.Title} {contact.Email}
+                            </span>
+                        </li>
+                    </template>
+                </ul>
+            </template>
+        </div>
+    </lightning-card>
+</template>

@@ -1,0 +1,53 @@
+<template>
+    <lightning-card title="Update across sObjects — Account + Contacts" icon-name="standard:related_list">
+        <div class="slds-var-p-horizontal_medium">
+            <lightning-record-picker
+                label="Pick an Account"
+                placeholder="Search Accounts..."
+                object-api-name="Account"
+                onchange={handleAccountChange}
+            ></lightning-record-picker>
+
+            <template lwc:if={errorMessages}>
+                <template for:each={errorMessages} for:item="error">
+                    <div key={error.id} class="slds-text-color_error slds-var-p-around_x-small">
+                        {error.message}
+                    </div>
+                </template>
+            </template>
+
+            <template lwc:if={hasSelection}>
+                <div class="slds-var-p-vertical_small">
+                    <p>
+                        <strong>{account.Name}</strong> — Rating:
+                        <lightning-badge label={account.Rating}></lightning-badge>
+                    </p>
+                </div>
+
+                <ul class="slds-has-dividers_bottom-space">
+                    <template for:each={contacts} for:item="contact">
+                        <li key={contact.Id} class="slds-item">
+                            {contact.Name}
+                            <span class="slds-var-p-left_small slds-text-color_weak">
+                                {contact.Department}
+                            </span>
+                        </li>
+                    </template>
+                </ul>
+
+                <div class="slds-var-p-vertical_small">
+                    <lightning-button
+                        variant="brand"
+                        label="Mark Strategic (Account + all Contacts, 1 request)"
+                        onclick={handleMarkStrategic}
+                    ></lightning-button>
+                </div>
+                <p class="slds-text-color_weak">
+                    Sets the Account Rating to Hot and every Contact's Department to
+                    &quot;Strategic Accounts&quot; in one atomic mutation
+                    (<code>allOrNone: true</code>).
+                </p>
+            </template>
+        </div>
+    </lightning-card>
+</template>
