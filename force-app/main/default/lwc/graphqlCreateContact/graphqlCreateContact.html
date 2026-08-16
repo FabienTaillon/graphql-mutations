@@ -1,5 +1,5 @@
 <template>
-    <lightning-card title="Create a Contact — pure JavaScript" icon-name="standard:contact">
+    <lightning-card title="Walk-in registration — ContactCreate, zero Apex" icon-name="standard:contact">
         <div class="slds-var-p-horizontal_medium">
             <lightning-layout multiple-rows>
                 <lightning-layout-item size="6" padding="around-small">
@@ -21,14 +21,6 @@
                 </lightning-layout-item>
                 <lightning-layout-item size="6" padding="around-small">
                     <lightning-input
-                        label="Title"
-                        data-field="title"
-                        value={title}
-                        onchange={handleChange}
-                    ></lightning-input>
-                </lightning-layout-item>
-                <lightning-layout-item size="6" padding="around-small">
-                    <lightning-input
                         type="email"
                         label="Email"
                         data-field="email"
@@ -36,13 +28,22 @@
                         onchange={handleChange}
                     ></lightning-input>
                 </lightning-layout-item>
+                <lightning-layout-item size="6" padding="around-small">
+                    <lightning-combobox
+                        label="Badge Type"
+                        data-field="badgeType"
+                        value={badgeType}
+                        options={badgeOptions}
+                        onchange={handleChange}
+                    ></lightning-combobox>
+                </lightning-layout-item>
             </lightning-layout>
 
             <div class="slds-var-p-around_small">
                 <lightning-button
                     variant="brand"
-                    label="Create via GraphQL"
-                    onclick={handleCreate}
+                    label="Register attendee"
+                    onclick={handleRegister}
                     disabled={isLoading}
                 ></lightning-button>
             </div>
@@ -55,16 +56,20 @@
                 </template>
             </template>
 
-            <template lwc:if={contacts}>
+            <template lwc:if={attendees}>
                 <div class="slds-text-title_caps slds-var-p-vertical_small">
-                    Most recently created (GraphQL query wire)
+                    Latest registrations (GraphQL query wire)
                 </div>
                 <ul class="slds-has-dividers_bottom-space">
-                    <template for:each={contacts} for:item="contact">
-                        <li key={contact.Id} class="slds-item">
-                            <strong>{contact.Name}</strong>
+                    <template for:each={attendees} for:item="attendee">
+                        <li key={attendee.Id} class="slds-item">
+                            <strong>{attendee.Name}</strong>
+                            <lightning-badge
+                                label={attendee.BadgeType}
+                                class="slds-var-m-left_small"
+                            ></lightning-badge>
                             <span class="slds-var-p-left_small slds-text-color_weak">
-                                {contact.Title} {contact.Email}
+                                {attendee.Email}
                             </span>
                         </li>
                     </template>

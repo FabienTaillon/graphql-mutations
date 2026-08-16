@@ -2,21 +2,28 @@ import { LightningElement, wire } from 'lwc';
 import { gql, graphql, executeMutation } from 'lightning/graphql';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
+const BADGE_OPTIONS = [
+    { label: 'Attendee', value: 'Attendee' },
+    { label: 'VIP', value: 'VIP' },
+    { label: 'Speaker', value: 'Speaker' }
+];
+
 export default class GraphqlCreateContact extends LightningElement {
+    badgeOptions = BADGE_OPTIONS;
     firstName = '';
     lastName = '';
-    title = '';
     email = '';
-    contacts;
+    badgeType = 'Attendee';
+    attendees;
     errors;
     isLoading = false;
     refreshGraphQL;
 
-    // A regular GraphQL query: the 5 most recently created contacts.
+    // A regular GraphQL query: the 5 most recent registrations.
     // The wire result exposes a refresh() function we call after the mutation.
     @wire(graphql, {
         query: gql`
-            query recentContacts {
+            query recentRegistrations {
                 uiapi {
                     query {
                         Contact(
@@ -29,7 +36,7 @@ export default class GraphqlCreateContact extends LightningElement {
                                     Name {
                                         value
                                     }
-                                    Title {
+                                    Badge_Type__c {
                                         value
                                     }
                                     Email {
@@ -43,16 +50,16 @@ export default class GraphqlCreateContact extends LightningElement {
             }
         `
     })
-    wiredContacts(result) {
+    wiredAttendees(result) {
         const { errors, data, refresh } = result;
         if (refresh) {
             this.refreshGraphQL = refresh;
         }
         if (data) {
-            this.contacts = data.uiapi.query.Contact.edges.map((edge) => ({
+            this.attendees = data.uiapi.query.Contact.edges.map((edge) => ({
                 Id: edge.node.Id,
                 Name: edge.node.Name.value,
-                Title: edge.node.Title.value,
+                BadgeType: edge.node.Badge_Type__c.value,
                 Email: edge.node.Email.value
             }));
         }
@@ -64,7 +71,7 @@ export default class GraphqlCreateContact extends LightningElement {
     // The mutation is static: values are passed as typed GraphQL variables,
     // never concatenated into the query string.
     createMutation = gql`
-        mutation createContact($input: ContactCreateInput!) {
+        mutation registerAttendee($input: ContactCreateInput!) {
             uiapi {
                 ContactCreate(input: $input) {
                     Record {
@@ -82,7 +89,7 @@ export default class GraphqlCreateContact extends LightningElement {
         this[event.target.dataset.field] = event.target.value;
     }
 
-    async handleCreate() {
+    async handleRegister() {
         if (!this.lastName) {
             this.errors = [{ message: 'Last Name is required' }];
             return;
@@ -98,28 +105,28 @@ export default class GraphqlCreateContact extends LightningElement {
                         Contact: {
                             FirstName: this.firstName,
                             LastName: this.lastName,
-                            Title: this.title,
-                            Email: this.email
+                            Email: this.email,
+                            Badge_Type__c: this.badgeType
                         }
                     }
                 }
             });
 
-            if (result.errors) {
+            if (result.errors?.length) {
                 this.errors = result.errors;
             } else {
                 const record = result.data.uiapi.ContactCreate.Record;
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Contact created',
-                        message: `${record.Name.value} (${record.Id})`,
+                        title: 'Attendee registered',
+                        message: `${record.Name.value} — badge ready to print`,
                         variant: 'success'
                     })
                 );
                 this.firstName = '';
                 this.lastName = '';
-                this.title = '';
                 this.email = '';
+                this.badgeType = 'Attendee';
                 await this.refreshGraphQL?.();
             }
         } catch (error) {

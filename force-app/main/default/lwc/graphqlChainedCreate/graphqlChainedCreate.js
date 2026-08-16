@@ -52,7 +52,9 @@ export default class GraphqlChainedCreate extends LightningElement {
         this.isLoading = true;
 
         const variables = {
-            accountInput: { Account: { Name: this.accountName } }
+            accountInput: {
+                Account: { Name: this.accountName, Sponsor_Tier__c: 'Bronze' }
+            }
         };
         const varDefs = ['$accountInput: AccountCreateInput!'];
         const operations = [
@@ -66,6 +68,7 @@ export default class GraphqlChainedCreate extends LightningElement {
                 Contact: {
                     FirstName: row.firstName,
                     LastName: row.lastName,
+                    Badge_Type__c: 'Attendee',
                     AccountId: '@{account}'
                 }
             };
@@ -93,7 +96,7 @@ export default class GraphqlChainedCreate extends LightningElement {
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Chained create complete',
-                        message: `${account.Name.value} + ${rows.length} contact(s) created and linked in 1 atomic request`,
+                        message: `${account.Name.value} (Bronze sponsor) + ${rows.length} attendee(s) registered and linked in 1 atomic request`,
                         variant: 'success'
                     })
                 );

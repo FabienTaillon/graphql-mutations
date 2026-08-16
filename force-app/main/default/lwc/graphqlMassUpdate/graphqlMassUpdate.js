@@ -3,25 +3,30 @@ import { gql, graphql, executeMutation } from 'lightning/graphql';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const COLUMNS = [
-    { label: 'First Name', fieldName: 'FirstName', editable: true },
-    { label: 'Last Name', fieldName: 'LastName', editable: true },
-    { label: 'Title', fieldName: 'Title', editable: true },
-    { label: 'Phone', fieldName: 'Phone', type: 'phone', editable: true },
+    { label: 'First Name', fieldName: 'FirstName' },
+    { label: 'Last Name', fieldName: 'LastName' },
+    { label: 'Company', fieldName: 'AccountName' },
+    { label: 'Badge', fieldName: 'Badge_Type__c' },
     { label: 'Email', fieldName: 'Email', type: 'email', editable: true },
-    { label: 'Account', fieldName: 'AccountName' }
+    {
+        label: 'Checked In',
+        fieldName: 'Checked_In__c',
+        type: 'boolean',
+        editable: true
+    }
 ];
 
 export default class GraphqlMassUpdate extends LightningElement {
     columns = COLUMNS;
     draftValues = [];
-    contacts;
+    attendees;
     errors;
     lastRequestSummary;
     refreshGraphQL;
 
     @wire(graphql, {
         query: gql`
-            query contactsToEdit {
+            query checkInQueue {
                 uiapi {
                     query {
                         Contact(
@@ -37,10 +42,10 @@ export default class GraphqlMassUpdate extends LightningElement {
                                     LastName {
                                         value
                                     }
-                                    Title {
+                                    Badge_Type__c {
                                         value
                                     }
-                                    Phone {
+                                    Checked_In__c {
                                         value
                                     }
                                     Email {
@@ -59,18 +64,18 @@ export default class GraphqlMassUpdate extends LightningElement {
             }
         `
     })
-    wiredContacts(result) {
+    wiredAttendees(result) {
         const { errors, data, refresh } = result;
         if (refresh) {
             this.refreshGraphQL = refresh;
         }
         if (data) {
-            this.contacts = data.uiapi.query.Contact.edges.map((edge) => ({
+            this.attendees = data.uiapi.query.Contact.edges.map((edge) => ({
                 Id: edge.node.Id,
                 FirstName: edge.node.FirstName.value,
                 LastName: edge.node.LastName.value,
-                Title: edge.node.Title.value,
-                Phone: edge.node.Phone.value,
+                Badge_Type__c: edge.node.Badge_Type__c.value,
+                Checked_In__c: edge.node.Checked_In__c.value,
                 Email: edge.node.Email.value,
                 AccountName: edge.node.Account?.Name.value
             }));
@@ -91,14 +96,14 @@ export default class GraphqlMassUpdate extends LightningElement {
         try {
             const result = await executeMutation({ query, variables });
 
-            if (result.errors) {
+            if (result.errors?.length) {
                 this.errors = result.errors;
             } else {
                 this.draftValues = [];
-                this.lastRequestSummary = `${drafts.length} record(s) updated in 1 GraphQL request`;
+                this.lastRequestSummary = `${drafts.length} attendee(s) updated in 1 GraphQL request`;
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Mass update complete',
+                        title: 'Queue processed',
                         message: this.lastRequestSummary,
                         variant: 'success'
                     })
@@ -126,7 +131,7 @@ export default class GraphqlMassUpdate extends LightningElement {
 
         // allOrNone: false → partial success is allowed, like Database.update
         const query = gql`
-            mutation massUpdateContacts(${varDefs.join(', ')}) {
+            mutation processCheckInQueue(${varDefs.join(', ')}) {
                 uiapi(input: { allOrNone: false }) {
                     ${operations.join('\n')}
                 }

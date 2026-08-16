@@ -1,9 +1,9 @@
 <template>
-    <lightning-card title="Update across sObjects — Account + Contacts" icon-name="standard:related_list">
+    <lightning-card title="Sponsor VIP upgrade — Account + Contacts, across sObjects" icon-name="standard:related_list">
         <div class="slds-var-p-horizontal_medium">
             <lightning-record-picker
-                label="Pick an Account"
-                placeholder="Search Accounts..."
+                label="Pick a Sponsor"
+                placeholder="Search sponsor companies..."
                 object-api-name="Account"
                 onchange={handleAccountChange}
             ></lightning-record-picker>
@@ -19,8 +19,8 @@
             <template lwc:if={hasSelection}>
                 <div class="slds-var-p-vertical_small">
                     <p>
-                        <strong>{account.Name}</strong> — Rating:
-                        <lightning-badge label={account.Rating}></lightning-badge>
+                        <strong>{account.Name}</strong> — Sponsor Tier:
+                        <lightning-badge label={account.SponsorTier}></lightning-badge>
                     </p>
                 </div>
 
@@ -28,9 +28,10 @@
                     <template for:each={contacts} for:item="contact">
                         <li key={contact.Id} class="slds-item">
                             {contact.Name}
-                            <span class="slds-var-p-left_small slds-text-color_weak">
-                                {contact.Department}
-                            </span>
+                            <lightning-badge
+                                label={contact.BadgeType}
+                                class="slds-var-m-left_small"
+                            ></lightning-badge>
                         </li>
                     </template>
                 </ul>
@@ -38,13 +39,13 @@
                 <div class="slds-var-p-vertical_small">
                     <lightning-button
                         variant="brand"
-                        label="Mark Strategic (Account + all Contacts, 1 request)"
-                        onclick={handleMarkStrategic}
+                        label="Upgrade to Gold (sponsor + all badges, 1 request)"
+                        onclick={handleUpgradeToGold}
                     ></lightning-button>
                 </div>
                 <p class="slds-text-color_weak">
-                    Sets the Account Rating to Hot and every Contact's Department to
-                    &quot;Strategic Accounts&quot; in one atomic mutation
+                    The sponsor doubles its budget: tier moves to Gold and every attendee
+                    badge flips to VIP in one atomic mutation across two sObject types
                     (<code>allOrNone: true</code>).
                 </p>
             </template>

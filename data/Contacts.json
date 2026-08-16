@@ -4,71 +4,64 @@
             "attributes": { "type": "Contact", "referenceId": "ContactRef1" },
             "FirstName": "Amy",
             "LastName": "Taylor",
-            "Title": "VP of Engineering",
-            "Phone": "+33 1 40 00 00 01",
-            "Email": "amy.taylor@acme.example.com",
-            "Department": "Engineering",
-            "AccountId": "@AcmeRef"
+            "Email": "amy.taylor@cloudnine.example.com",
+            "Badge_Type__c": "Speaker",
+            "Checked_In__c": true,
+            "AccountId": "@CloudNineRef"
         },
         {
             "attributes": { "type": "Contact", "referenceId": "ContactRef2" },
             "FirstName": "Michael",
             "LastName": "Jones",
-            "Title": "Buyer",
-            "Phone": "+33 1 40 00 00 02",
-            "Email": "michael.jones@acme.example.com",
-            "Department": "Procurement",
-            "AccountId": "@AcmeRef"
+            "Email": "michael.jones@cloudnine.example.com",
+            "Badge_Type__c": "Attendee",
+            "Checked_In__c": false,
+            "AccountId": "@CloudNineRef"
         },
         {
             "attributes": { "type": "Contact", "referenceId": "ContactRef3" },
             "FirstName": "Jennifer",
             "LastName": "Wu",
-            "Title": "CEO",
-            "Phone": "+33 1 40 00 00 03",
-            "Email": "jennifer.wu@acme.example.com",
-            "Department": "Executive",
-            "AccountId": "@AcmeRef"
+            "Email": "jennifer.wu@cloudnine.example.com",
+            "Badge_Type__c": "Attendee",
+            "Checked_In__c": false,
+            "AccountId": "@CloudNineRef"
         },
         {
             "attributes": { "type": "Contact", "referenceId": "ContactRef4" },
             "FirstName": "Sofia",
             "LastName": "Perez",
-            "Title": "CTO",
-            "Phone": "+33 1 40 00 00 04",
-            "Email": "sofia.perez@globex.example.com",
-            "Department": "Engineering",
-            "AccountId": "@GlobexRef"
+            "Email": "sofia.perez@appy.example.com",
+            "Badge_Type__c": "VIP",
+            "Checked_In__c": true,
+            "AccountId": "@AppyRef"
         },
         {
             "attributes": { "type": "Contact", "referenceId": "ContactRef5" },
             "FirstName": "Lucas",
             "LastName": "Martin",
-            "Title": "Account Manager",
-            "Phone": "+33 1 40 00 00 05",
-            "Email": "lucas.martin@globex.example.com",
-            "Department": "Sales",
-            "AccountId": "@GlobexRef"
+            "Email": "lucas.martin@appy.example.com",
+            "Badge_Type__c": "Attendee",
+            "Checked_In__c": false,
+            "AccountId": "@AppyRef"
         },
         {
             "attributes": { "type": "Contact", "referenceId": "ContactRef6" },
             "FirstName": "Emma",
             "LastName": "Dubois",
-            "Title": "Consultant",
-            "Phone": "+33 1 40 00 00 06",
-            "Email": "emma.dubois@initech.example.com",
-            "Department": "Delivery",
-            "AccountId": "@InitechRef"
+            "Email": "emma.dubois@flowtastic.example.com",
+            "Badge_Type__c": "Attendee",
+            "Checked_In__c": false,
+            "AccountId": "@FlowtasticRef"
         },
         {
             "attributes": { "type": "Contact", "referenceId": "ContactRef7" },
             "FirstName": "Noah",
             "LastName": "Bernard",
-            "Title": "Solution Architect",
-            "Phone": "+33 1 40 00 00 07",
-            "Email": "noah.bernard@initech.example.com",
-            "Department": "Delivery",
-            "AccountId": "@InitechRef"
+            "Email": "noah.bernard@flowtastic.example.com",
+            "Badge_Type__c": "Attendee",
+            "Checked_In__c": false,
+            "AccountId": "@FlowtasticRef"
         }
     ]
 }

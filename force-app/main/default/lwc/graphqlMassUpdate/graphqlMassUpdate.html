@@ -1,9 +1,10 @@
 <template>
-    <lightning-card title="Mass update — one GraphQL request" icon-name="standard:record_update">
+    <lightning-card title="Check-in queue — mass update, one GraphQL request" icon-name="standard:record_update">
         <div class="slds-var-p-horizontal_medium">
             <p class="slds-var-p-bottom_small slds-text-color_weak">
-                Edit any cells below, then Save: every draft row becomes an aliased
-                <code>ContactUpdate</code> operation inside a single mutation document.
+                The morning rush: tick &quot;Checked In&quot; (and fix emails) inline, then Save —
+                every edited row becomes an aliased <code>ContactUpdate</code> operation inside a
+                single mutation document, with <code>allOrNone: false</code>.
             </p>
 
             <template lwc:if={lastRequestSummary}>
@@ -18,10 +19,10 @@
                 </template>
             </template>
 
-            <template lwc:if={contacts}>
+            <template lwc:if={attendees}>
                 <lightning-datatable
                     key-field="Id"
-                    data={contacts}
+                    data={attendees}
                     columns={columns}
                     draft-values={draftValues}
                     onsave={handleSave}

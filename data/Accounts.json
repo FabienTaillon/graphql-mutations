@@ -1,22 +1,22 @@
 {
     "records": [
         {
-            "attributes": { "type": "Account", "referenceId": "AcmeRef" },
-            "Name": "Acme Corporation",
-            "Rating": "Warm",
-            "Industry": "Manufacturing"
-        },
-        {
-            "attributes": { "type": "Account", "referenceId": "GlobexRef" },
-            "Name": "Globex International",
-            "Rating": "Cold",
+            "attributes": { "type": "Account", "referenceId": "CloudNineRef" },
+            "Name": "Cloud Nine Computing",
+            "Sponsor_Tier__c": "Silver",
             "Industry": "Technology"
         },
         {
-            "attributes": { "type": "Account", "referenceId": "InitechRef" },
-            "Name": "Initech Solutions",
-            "Rating": "Warm",
+            "attributes": { "type": "Account", "referenceId": "AppyRef" },
+            "Name": "Appy Solutions",
+            "Sponsor_Tier__c": "Silver",
             "Industry": "Consulting"
+        },
+        {
+            "attributes": { "type": "Account", "referenceId": "FlowtasticRef" },
+            "Name": "Flowtastic",
+            "Sponsor_Tier__c": "Bronze",
+            "Industry": "Technology"
         }
     ]
 }

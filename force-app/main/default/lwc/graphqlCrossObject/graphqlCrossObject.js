@@ -9,8 +9,8 @@ export default class GraphqlCrossObject extends LightningElement {
     errors;
     refreshGraphQL;
 
-    // One GraphQL query, two sObjects: the Account and its Contacts.
-    // The query comes from a getter: while it returns undefined (no account
+    // One GraphQL query, two sObjects: the sponsor Account and its attendees.
+    // The query comes from a getter: while it returns undefined (no sponsor
     // selected yet), the wire adapter doesn't execute.
     @wire(graphql, {
         query: '$accountQuery',
@@ -27,13 +27,13 @@ export default class GraphqlCrossObject extends LightningElement {
                 ? {
                       Id: accounts[0].node.Id,
                       Name: accounts[0].node.Name.value,
-                      Rating: accounts[0].node.Rating.value
+                      SponsorTier: accounts[0].node.Sponsor_Tier__c.value
                   }
                 : undefined;
             this.contacts = data.uiapi.query.Contact.edges.map((edge) => ({
                 Id: edge.node.Id,
                 Name: edge.node.Name.value,
-                Department: edge.node.Department.value
+                BadgeType: edge.node.Badge_Type__c.value
             }));
         }
         if (errors) {
@@ -46,7 +46,7 @@ export default class GraphqlCrossObject extends LightningElement {
             return undefined;
         }
         return gql`
-            query accountWithContacts($accountId: ID!) {
+            query sponsorWithAttendees($accountId: ID!) {
                 uiapi {
                     query {
                         Account(where: { Id: { eq: $accountId } }, first: 1) {
@@ -56,7 +56,7 @@ export default class GraphqlCrossObject extends LightningElement {
                                     Name {
                                         value
                                     }
-                                    Rating {
+                                    Sponsor_Tier__c {
                                         value
                                     }
                                 }
@@ -72,7 +72,7 @@ export default class GraphqlCrossObject extends LightningElement {
                                     Name {
                                         value
                                     }
-                                    Department {
+                                    Badge_Type__c {
                                         value
                                     }
                                 }
@@ -100,14 +100,14 @@ export default class GraphqlCrossObject extends LightningElement {
     }
 
     // One mutation document that spans TWO sObject types:
-    // AccountUpdate + one ContactUpdate per child contact.
-    async handleMarkStrategic() {
+    // AccountUpdate + one ContactUpdate per attendee.
+    async handleUpgradeToGold() {
         this.errors = undefined;
 
         const variables = {
             accountInput: {
                 Id: this.account.Id,
-                Account: { Rating: 'Hot' }
+                Account: { Sponsor_Tier__c: 'Gold' }
             }
         };
         const varDefs = ['$accountInput: AccountUpdateInput!'];
@@ -118,7 +118,7 @@ export default class GraphqlCrossObject extends LightningElement {
         this.contacts.forEach((contact, index) => {
             variables[`contactInput${index}`] = {
                 Id: contact.Id,
-                Contact: { Department: 'Strategic Accounts' }
+                Contact: { Badge_Type__c: 'VIP' }
             };
             varDefs.push(`$contactInput${index}: ContactUpdateInput!`);
             operations.push(
@@ -127,7 +127,7 @@ export default class GraphqlCrossObject extends LightningElement {
         });
 
         const query = gql`
-            mutation markAccountStrategic(${varDefs.join(', ')}) {
+            mutation upgradeSponsorToGold(${varDefs.join(', ')}) {
                 uiapi(input: { allOrNone: true }) {
                     ${operations.join('\n')}
                 }
@@ -136,13 +136,13 @@ export default class GraphqlCrossObject extends LightningElement {
 
         try {
             const result = await executeMutation({ query, variables });
-            if (result.errors) {
+            if (result.errors?.length) {
                 this.errors = result.errors;
             } else {
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Cross-object update complete',
-                        message: `1 Account + ${this.contacts.length} Contact(s) updated in a single request`,
+                        title: 'Sponsor upgraded',
+                        message: `1 sponsor Account + ${this.contacts.length} attendee badge(s) upgraded in a single request`,
                         variant: 'success'
                     })
                 );

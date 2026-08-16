@@ -2,25 +2,31 @@ import { LightningElement } from 'lwc';
 import { gql, executeMutation } from 'lightning/graphql';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
+const BADGE_OPTIONS = [
+    { label: 'Attendee', value: 'Attendee' },
+    { label: 'VIP', value: 'VIP' },
+    { label: 'Speaker', value: 'Speaker' }
+];
+
 export default class GraphqlLdsCache extends LightningElement {
+    badgeOptions = BADGE_OPTIONS;
     contactId;
-    phone = '';
-    title = '';
+    badgeType = 'Attendee';
     errors;
 
     // The selection set queries back the fields we just changed.
     // Lightning Data Service ingests that response and notifies every
-    // subscribed adapter — the record form updates with no refresh code.
-    updateMutation = gql`
-        mutation updateContact($input: ContactUpdateInput!) {
+    // subscribed adapter — the welcome screen updates with no refresh code.
+    checkInMutation = gql`
+        mutation checkInAttendee($input: ContactUpdateInput!) {
             uiapi {
                 ContactUpdate(input: $input) {
                     Record {
                         Id
-                        Phone {
+                        Checked_In__c {
                             value
                         }
-                        Title {
+                        Badge_Type__c {
                             value
                         }
                     }
@@ -34,33 +40,33 @@ export default class GraphqlLdsCache extends LightningElement {
         this.errors = undefined;
     }
 
-    handleChange(event) {
-        this[event.target.dataset.field] = event.target.value;
+    handleBadgeChange(event) {
+        this.badgeType = event.target.value;
     }
 
-    async handleUpdate() {
+    async handleCheckIn() {
         this.errors = undefined;
         try {
             const result = await executeMutation({
-                query: this.updateMutation,
+                query: this.checkInMutation,
                 variables: {
                     input: {
                         Id: this.contactId,
                         Contact: {
-                            Phone: this.phone,
-                            Title: this.title
+                            Checked_In__c: true,
+                            Badge_Type__c: this.badgeType
                         }
                     }
                 }
             });
-            if (result.errors) {
+            if (result.errors?.length) {
                 this.errors = result.errors;
             } else {
                 this.dispatchEvent(
                     new ShowToastEvent({
-                        title: 'Mutation executed',
+                        title: 'Attendee checked in',
                         message:
-                            'Watch the record form on the left — it updated itself via the LDS cache',
+                            'Watch the welcome screen on the left — it updated itself via the LDS cache',
                         variant: 'success'
                     })
                 );

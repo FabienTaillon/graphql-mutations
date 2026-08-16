@@ -1,21 +1,22 @@
 <template>
-    <lightning-card title="Chained create — Account + Contacts, 1 atomic request" icon-name="standard:hierarchy">
+    <lightning-card title="Sponsor group registration — chained create, 1 atomic request" icon-name="standard:hierarchy">
         <div class="slds-var-p-horizontal_medium">
             <p class="slds-var-p-bottom_small slds-text-color_weak">
-                The contacts reference <code>AccountId: "&#64;{account}"</code> — the Id of an
-                Account that doesn't exist yet when the request is sent. The server resolves
-                the chained reference, all-or-nothing.
+                A sponsor company shows up with unregistered people. Each attendee references
+                <code>AccountId: "&#64;{account}"</code> — the Id of a sponsor Account that
+                doesn't exist yet when the request is sent. The server resolves the chained
+                reference, all-or-nothing.
             </p>
 
             <lightning-input
-                label="Account Name"
+                label="Sponsor Company"
                 value={accountName}
                 required
                 onchange={handleAccountNameChange}
             ></lightning-input>
 
             <div class="slds-text-title_caps slds-var-p-top_medium slds-var-p-bottom_x-small">
-                Contacts
+                Attendees
             </div>
             <template for:each={contactRows} for:item="row">
                 <lightning-layout key={row.key} vertical-align="end">
@@ -40,7 +41,7 @@
                     <lightning-layout-item size="2" padding="horizontal-small">
                         <lightning-button-icon
                             icon-name="utility:delete"
-                            alternative-text="Remove contact"
+                            alternative-text="Remove attendee"
                             data-key={row.key}
                             onclick={handleRemoveContact}
                         ></lightning-button-icon>
@@ -50,14 +51,14 @@
 
             <div class="slds-var-p-vertical_small">
                 <lightning-button
-                    label="Add Contact"
+                    label="Add Attendee"
                     icon-name="utility:add"
                     onclick={handleAddContact}
                     class="slds-var-m-right_small"
                 ></lightning-button>
                 <lightning-button
                     variant="brand"
-                    label="Create all (1 request)"
+                    label="Register sponsor + group (1 request)"
                     onclick={handleCreate}
                     disabled={isLoading}
                 ></lightning-button>
@@ -73,9 +74,9 @@
 
             <template lwc:if={createdAccountId}>
                 <p class="slds-var-p-vertical_small">
-                    Created:
-                    <a href={accountUrl} target="_blank">open the new Account</a>
-                    to see its linked Contacts.
+                    Registered:
+                    <a href={accountUrl} target="_blank">open the sponsor Account</a>
+                    to see its linked attendees.
                 </p>
             </template>
         </div>

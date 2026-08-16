@@ -1,9 +1,9 @@
 <template>
-    <lightning-card title="Lightning Data Service cache in action" icon-name="standard:data_streams">
+    <lightning-card title="Welcome screen — Lightning Data Service cache in action" icon-name="standard:data_streams">
         <div class="slds-var-p-horizontal_medium">
             <lightning-record-picker
-                label="Pick a Contact"
-                placeholder="Search Contacts..."
+                label="Find an attendee"
+                placeholder="Search attendees..."
                 object-api-name="Contact"
                 onchange={handleContactChange}
             ></lightning-record-picker>
@@ -21,15 +21,15 @@
                     <lightning-layout-item size="6" padding="around-small">
                         <div class="slds-box slds-box_small">
                             <div class="slds-text-title_caps slds-var-p-bottom_small">
-                                Standard record form (LDS subscriber)
+                                Welcome screen (standard form, LDS subscriber)
                             </div>
                             <lightning-record-view-form
                                 record-id={contactId}
                                 object-api-name="Contact"
                             >
                                 <lightning-output-field field-name="Name"></lightning-output-field>
-                                <lightning-output-field field-name="Title"></lightning-output-field>
-                                <lightning-output-field field-name="Phone"></lightning-output-field>
+                                <lightning-output-field field-name="Badge_Type__c"></lightning-output-field>
+                                <lightning-output-field field-name="Checked_In__c"></lightning-output-field>
                             </lightning-record-view-form>
                         </div>
                     </lightning-layout-item>
@@ -37,25 +37,19 @@
                     <lightning-layout-item size="6" padding="around-small">
                         <div class="slds-box slds-box_small">
                             <div class="slds-text-title_caps slds-var-p-bottom_small">
-                                GraphQL mutation (no refresh code)
+                                Check-in desk (GraphQL mutation, no refresh code)
                             </div>
-                            <lightning-input
-                                label="New Title"
-                                data-field="title"
-                                value={title}
-                                onchange={handleChange}
-                            ></lightning-input>
-                            <lightning-input
-                                label="New Phone"
-                                data-field="phone"
-                                value={phone}
-                                onchange={handleChange}
-                            ></lightning-input>
+                            <lightning-combobox
+                                label="Badge Type"
+                                value={badgeType}
+                                options={badgeOptions}
+                                onchange={handleBadgeChange}
+                            ></lightning-combobox>
                             <div class="slds-var-p-top_small">
                                 <lightning-button
                                     variant="brand"
-                                    label="Update via executeMutation"
-                                    onclick={handleUpdate}
+                                    label="Check in via executeMutation"
+                                    onclick={handleCheckIn}
                                 ></lightning-button>
                             </div>
                         </div>
