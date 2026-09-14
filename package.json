@@ -1,8 +1,8 @@
 {
-  "name": "salesforce-app",
+  "name": "graphql-mutations",
   "private": true,
   "version": "1.0.0",
-  "description": "Salesforce App",
+  "description": "Query and Update Records with GraphQL Mutations in LWC - demo project",
   "scripts": {
     "lint": "eslint **/{aura,lwc}/**/*.js",
     "test": "npm run test:unit",
